@@ -21,10 +21,11 @@ const config = {
   },
 };
 
+import {relative} from 'path';
 import webpack from 'webpack';
 import chalk from 'chalk';
 
-const {red} = chalk;
+const {red, magenta, cyan, green, yellow} = chalk;
 
 export default config;
 
@@ -35,18 +36,20 @@ if(file === process.argv[1]) {
 async function build(watch) {
   let info;
   try {
-    info = await new Promise((resolve, reject) => {
+    info = await new Promise((resolve, reject) =>
       webpack(config, (err, stats) => {
         const info = stats.toJson();
-        err ??= info.errors;
+
+        if(info.errors?.length) {
+          err ??= info.errors;
+        }
 
         if(err) {
           return reject(err);
         }
 
         return resolve(info);
-      });
-    });
+    }));
   } catch(errors) {
     if(!Array.isArray(errors)) {
       if(errors) {
@@ -66,9 +69,15 @@ async function build(watch) {
     return;
   }
 
-  if(info.warnings) {
-    console.warn(info.warnings);
+  const {warnings, hash, time, outputPath: outputAbs} = info;
+
+  const outputPath = relative(process.cwd(), outputAbs);
+
+  if(info.warnings?.length) {
+    console.warn(yellow(info.warnings));
   }
 
-  console.log(info);
+  const seconds = (time / 1000).toFixed(1);
+
+  console.log(`Bundle ${magenta(hash)} built to ${green(`${outputPath}/`)} in ${cyan(seconds)} seconds`);
 }
