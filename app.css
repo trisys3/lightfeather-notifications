@@ -50,8 +50,11 @@
   margin-top: -2px;
 }
 
+.no-supervisors {
+  color: #666;
+}
+
 .supervisor {
-  /* margin-bottom: 20px; */
   width: 100%;
 }
 

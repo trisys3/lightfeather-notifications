@@ -26,6 +26,13 @@ export default function Notifications() {
     getSupervisors();
   }, []);
 
+  let supervisorExtraClasses = 'no-supervisors';
+  let supervisorsJsx = <option className='supervisor no-supervisor'>{'Supervisors'}</option>;
+  if(supervisors?.length) {
+    supervisorExtraClasses = '';
+    supervisorsJsx = supervisors?.map(supervisor => <option key={supervisor} className='supervisor'>{supervisor}</option>);
+  }
+
   return <Fragment>
     <div className='notifications-title'>{'Receive Notifications'}</div>
 
@@ -62,8 +69,8 @@ export default function Notifications() {
 
       <label className='label supervisor'>
         <div className='label-text supervisor-label'>{'Supervisor'}</div>
-        <select className='field' id='supervisor'>
-          {supervisors?.map(supervisor => <option key={supervisor}>{supervisor}</option>)}
+        <select className={`field ${supervisorExtraClasses}`} id='supervisor'>
+          {supervisorsJsx}
         </select>
       </label>
 
@@ -109,8 +116,6 @@ export default function Notifications() {
       [type]: typeVal,
       supervisor,
     };
-
-    console.log('data:', data);
 
     try {
       // await post('https://6099a4760f5a13001721985c.mockapi.io/api/submit', data);
