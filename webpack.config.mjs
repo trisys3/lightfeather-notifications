@@ -6,8 +6,8 @@ const {pathname: file} = new URL(fileUrl);
 
 const config = {
   mode: 'development',
-  entry: {app: './src/app.js'},
-  output: {path: process.cwd(), filename: 'app.js'},
+  entry: {app: './app.js'},
+  output: {filename: 'app.js'},
   devtool: 'inline-source-map',
   module: {
     rules: [{
