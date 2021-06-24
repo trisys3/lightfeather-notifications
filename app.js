@@ -39,13 +39,13 @@ export default function Notifications() {
       <label className='label type email'>
         <div className='type-label email-label'>{'Email'}</div>
         <input type='radio' name='type' className='type-field' id='email' checked={type === 'email'} onChange={() => setType('email')} />
-        <input type='text' className='field' placeholder='Email' id='email' value={email || ''} onChange={event => changeField(event, 'email')} />
+        <input type='text' className='field' placeholder='Email' id='email' value={email || ''} onClick={() => setType('email')} onChange={event => changeField(event, 'email')} />
       </label>
 
       <label className='label type phone'>
         <div className='type-label phone-label'>{'Phone'}</div>
         <input type='radio' name='type' className='type-field' id='phone' checked={type === 'phone'} onChange={() => setType('phone')} />
-        <input type='text' className='field' placeholder='Phone' id='phone' value={phone || ''} onChange={event => changeField(event, 'phone')} />
+        <input type='text' className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={() => setType('phone')} onChange={event => changeField(event, 'phone')} />
       </label>
 
       <button onClick={requestNotifications} className='notifications-submit'>{'Receive'}</button>
