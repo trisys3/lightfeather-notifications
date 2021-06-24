@@ -33,7 +33,7 @@ export default function Notifications() {
   let supervisorsJsx = <option className='supervisor no-supervisor'>{'Supervisors'}</option>;
   if(supervisors?.length) {
     supervisorExtraClasses = '';
-    supervisorsJsx = supervisors?.map(supervisor => <option key={supervisor} className='supervisor'>{supervisor}</option>);
+    supervisorsJsx = supervisors?.map(supervisor => <option key={supervisor} className='supervisor' onClick={event => changeField(event, 'supervisor')}>{supervisor}</option>);
   }
 
   return <Fragment>
