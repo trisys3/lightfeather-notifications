@@ -2,6 +2,8 @@ const {document} = globalThis;
 
 const element = document?.getElementById('notifications');
 
+import './app.css';
+
 import {useState} from 'react';
 import {render} from 'react-dom';
 import {post} from 'axios';

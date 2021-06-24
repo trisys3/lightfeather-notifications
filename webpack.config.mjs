@@ -20,6 +20,9 @@ const config = {
         loader: 'babel-loader',
         options: {cacheDirectory: '.cache/babel/'},
       },
+    }, {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader'],
     }],
   },
 };
