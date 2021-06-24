@@ -1,4 +1,4 @@
-const phoneRegex = /^\(\d{3}\)\d{3}-\d{4}$|^\d{3}-\d{3}-\d{4}$|^\d{10}$/;
+const phoneRegex = /^\d{10}$/;
 const emailRegex = /^[^@]+@[A-Za-z]+\.[A-Za-z]{2,}$/;
 
 const {document} = globalThis;
@@ -42,12 +42,12 @@ export default function Notifications() {
     <form className='notifications'>
       <label className='label first-name'>
         <div className='label-text first-name-label'>{'First Name'}</div>
-        <input type='text' required autoComplete className='field' id='first-name' placeholder='First Name' value={firstName ?? ''} onChange={event => changeField(event, 'first-name')} />
+        <input type='text' autoFocus required autoComplete='true' className='field' id='first-name' placeholder='First Name' value={firstName ?? ''} onChange={event => changeField(event, 'first-name')} />
       </label>
 
       <label className='label last-name'>
         <div className='label-text last-name-label'>{'Last Name'}</div>
-        <input type='text' required autoComplete className='field' placeholder='Last Name' id='last-name' value={lastName ?? ''} onChange={event => changeField(event, 'last-name')} />
+        <input type='text' required autoComplete='true' className='field' placeholder='Last Name' id='last-name' value={lastName ?? ''} onChange={event => changeField(event, 'last-name')} />
       </label>
 
       <div className='types-label'>{'Get notified by:'}</div>
@@ -55,24 +55,24 @@ export default function Notifications() {
       <label className='label type email'>
         <div className='label-text type-label email-label'>
           <div className='type-label-text'>{'Email'}</div>
-          <input type='radio' name='type' className='type-option' id='email' checked={type === 'email'} onChange={event => changeType(event, 'email')} />
+          <input type='radio' name='type' autoComplete='true' className='type-option' id='email' checked={type === 'email'} onChange={event => changeType(event, 'email')} />
         </div>
 
-        <input type='text' required autoComplete className='field' placeholder='Email' id='email' value={email || ''} onClick={event => changeType(event, 'email')} onChange={event => changeField(event, 'email')} />
+        <input type='text' required autoComplete='true' className='field' placeholder='Email' id='email' value={email || ''} onClick={event => changeType(event, 'email')} onChange={event => changeField(event, 'email')} />
       </label>
 
       <label className='label type phone'>
         <div className='label-text type-label phone-label'>
           <div className='type-label-text'>{'Phone'}</div>
-          <input type='radio' name='type' className='type-option' id='phone' checked={type === 'phone'} onChange={event => changeType(event, 'phone')} />
+          <input type='radio' name='type' autoComplete='true' className='type-option' id='phone' checked={type === 'phone'} onChange={event => changeType(event, 'phone')} />
         </div>
 
-        <input type='text' required autoComplete className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={event => changeType(event, 'phone')} onChange={event => changeField(event, 'phone')} />
+        <input type='tel' required autoComplete='true' className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={event => changeType(event, 'phone')} onChange={event => changeField(event, 'phone')} />
       </label>
 
       <label className='label supervisor'>
         <div className='label-text supervisor-label'>{'Supervisor'}</div>
-        <select required autoComplete className={`field ${supervisorExtraClasses}`} id='supervisor'>
+        <select required autoComplete='true' className={`field ${supervisorExtraClasses}`} id='supervisor'>
           {supervisorsJsx}
         </select>
       </label>
