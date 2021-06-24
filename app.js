@@ -12,6 +12,7 @@ render(<Notifications />, element);
 
 export default function Notifications() {
   const [submitted, setSubmitted] = useState();
+  const [changed, setChanged] = useState();
   const [error, setError] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
@@ -26,33 +27,41 @@ export default function Notifications() {
     <form className='notifications'>
       <label className='label first-name'>
         <div className='label-text first-name-label'>{'First Name'}</div>
-        <input type='text' className='field' id='first-name' placeholder='First Name' value={firstName ?? ''} onChange={event => changeField(event, 'first-name')} />
+        <input type='text' required className='field' id='first-name' placeholder='First Name' value={firstName ?? ''} onChange={event => changeField(event, 'first-name')} />
       </label>
 
       <label className='label last-name'>
         <div className='label-text last-name-label'>{'Last Name'}</div>
-        <input type='text' className='field' placeholder='Last Name' id='last-name' value={lastName ?? ''} onChange={event => changeField(event, 'last-name')} />
+        <input type='text' required className='field' placeholder='Last Name' id='last-name' value={lastName ?? ''} onChange={event => changeField(event, 'last-name')} />
       </label>
 
-      <div className='types-label'>{'I would like to be notified by:'}</div>
+      <div className='types-label'>{'Get notified by:'}</div>
 
       <label className='label type email'>
-        <div className='type-label email-label'>{'Email'}</div>
-        <input type='radio' name='type' className='type-field' id='email' checked={type === 'email'} onChange={() => setType('email')} />
-        <input type='text' className='field' placeholder='Email' id='email' value={email || ''} onClick={() => setType('email')} onChange={event => changeField(event, 'email')} />
+        <div className='label-text type-label email-label'>
+          <div className='type-label-text'>{'Email'}</div>
+          <input type='radio' name='type' className='type-option' id='email' checked={type === 'email'} onChange={() => setType('email')} />
+        </div>
+
+        <input type='text' required className='field' placeholder='Email' id='email' value={email || ''} onClick={() => setType('email')} onChange={event => changeField(event, 'email')} />
       </label>
 
       <label className='label type phone'>
-        <div className='type-label phone-label'>{'Phone'}</div>
-        <input type='radio' name='type' className='type-field' id='phone' checked={type === 'phone'} onChange={() => setType('phone')} />
-        <input type='text' className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={() => setType('phone')} onChange={event => changeField(event, 'phone')} />
+        <div className='label-text type-label phone-label'>
+          <div className='type-label-text'>{'Phone'}</div>
+          <input type='radio' name='type' className='type-option' id='phone' checked={type === 'phone'} onChange={() => setType('phone')} />
+        </div>
+
+        <input type='text' required className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={() => setType('phone')} onChange={event => changeField(event, 'phone')} />
       </label>
 
-      <button onClick={requestNotifications} className='notifications-submit'>{'Receive'}</button>
+      <button onClick={requestNotifications} disabled={submitted} className='notifications-submit'>{'Receive'}</button>
     </form>
   </Fragment>;
 
   function changeField({currentTarget: {value: field}}, fieldName) {
+    setSubmitted();
+
     switch(fieldName) {
       case 'first-name': {
         setFirstName(field);
@@ -75,11 +84,22 @@ export default function Notifications() {
   async function requestNotifications(event) {
     event.preventDefault();
 
-    setSubmitted();
     setError();
 
+    let typeVal = email;
+    if(type === 'phone') {
+      typeVal = phone;
+    }
+
+    const data = {
+      firstName,
+      lastName,
+      [type]: typeVal,
+      supervisor,
+    };
+
     try {
-      await post('https://6099a4760f5a13001721985c.mockapi.io/api/submit');
+      // await post('https://6099a4760f5a13001721985c.mockapi.io/api/submit', data);
     } catch(error) {
       setError(true);
     }

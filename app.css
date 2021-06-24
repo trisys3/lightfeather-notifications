@@ -20,6 +20,7 @@
 .label-text {
   margin-right: 5px;
   width: 100px;
+  display: flex;
 }
 
 .field {
@@ -29,6 +30,7 @@
 
 .types-label {
   text-align: center;
+  font-size: 0.95em;
   row-gap: 10px;
   width: 100%;
 }
@@ -36,6 +38,14 @@
 .type {
   display: flex;
   align-items: center;
+}
+
+.type-label-text {
+  width: 60px;
+}
+
+.type-option {
+  margin-top: -2px;
 }
 
 .phone {
@@ -62,3 +72,5 @@
 .notifications-submit:active {
   background-color: #118a11;
 }
+
+.notifications-submit:disabled
