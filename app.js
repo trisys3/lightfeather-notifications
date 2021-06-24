@@ -1,3 +1,6 @@
+const phoneRegex = /^\(\d{3}\)\d{3}-\d{4}$|^\d{3}-\d{3}-\d{4}$|^\d{10}$/;
+const emailRegex = /^[^@]+@[A-Za-z]+\.[A-Za-z]{2,}$/;
+
 const {document} = globalThis;
 
 const element = document?.getElementById('notifications');
@@ -74,9 +77,13 @@ export default function Notifications() {
         </select>
       </label>
 
-      <button onClick={requestNotifications} disabled={submitted && 'disabled' || null} className='notifications-submit'>{'Receive'}</button>
+      <button onClick={requestNotifications} disabled={!canSubmit() || submitted && 'disabled' || null} className='notifications-submit'>{'Receive'}</button>
     </form>
   </Fragment>;
+
+  function canSubmit() {
+    return firstName && lastName && phone?.match(phoneRegex) && email?.match(emailRegex);
+  }
 
   function changeField({currentTarget: {value: field}}, fieldName) {
     setSubmitted();
