@@ -5,20 +5,24 @@ body {
 }
 
 #notifications {
+  background-color: #ddd;
   margin-inline: 10%;
-  margin-top: 10px;
+  margin-top: 15px;
   max-width: 1600px;
   display: flex;
   flex-direction: column;
 }
 
 .notifications-title {
+  background-color: #aaa;
   text-align: center;
   font-size: 1.5em;
   margin-bottom: 20px;
+  padding-block: 5px;
 }
 
 .notifications {
+  padding-inline: 10px;
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -39,6 +43,7 @@ body {
 }
 
 .label-text {
+  flex-shrink: 0;
   margin-right: 5px;
   width: 100px;
   display: flex;
@@ -47,6 +52,7 @@ body {
 .field {
   flex-grow: 1;
   border: 1px solid #888;
+  min-width: 0;
   height: 35px;
 }
 
