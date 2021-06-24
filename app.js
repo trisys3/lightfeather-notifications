@@ -4,9 +4,9 @@ const element = document?.getElementById('notifications');
 
 import './app.css';
 
-import {Fragment, useState} from 'react';
+import {Fragment, useState, useEffect} from 'react';
 import {render} from 'react-dom';
-import {post} from 'axios';
+import axios, {post} from 'axios';
 
 render(<Notifications />, element);
 
@@ -19,7 +19,12 @@ export default function Notifications() {
   const [type, setType] = useState('email');
   const [email, setEmail] = useState();
   const [phone, setPhone] = useState();
+  const [supervisors, setSupervisors] = useState();
   const [supervisor, setSupervisor] = useState();
+
+  useEffect(() => {
+    getSupervisors();
+  }, []);
 
   return <Fragment>
     <div className='notifications-title'>{'Receive Notifications'}</div>
@@ -53,6 +58,13 @@ export default function Notifications() {
         </div>
 
         <input type='text' required className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={() => setType('phone')} onChange={event => changeField(event, 'phone')} />
+      </label>
+
+      <label className='label supervisor'>
+        <div className='label-text supervisor-label'>{'Supervisor'}</div>
+        <select className='field' id='supervisor'>
+          {supervisors?.map(supervisor => <option key={supervisor}>{supervisor}</option>)}
+        </select>
       </label>
 
       <button onClick={requestNotifications} disabled={submitted} className='notifications-submit'>{'Receive'}</button>
@@ -98,6 +110,8 @@ export default function Notifications() {
       supervisor,
     };
 
+    console.log('data:', data);
+
     try {
       // await post('https://6099a4760f5a13001721985c.mockapi.io/api/submit', data);
     } catch(error) {
@@ -105,5 +119,34 @@ export default function Notifications() {
     }
 
     setSubmitted(true);
+  }
+
+  async function getSupervisors() {
+    let supervisors;
+    try {
+      ({data: supervisors} = await axios('https://6099a4760f5a13001721985c.mockapi.io/api/supervisors'));
+    } catch(error) {
+      return;
+    }
+
+    ({results: supervisors = supervisors} = supervisors ?? {});
+
+    supervisors = supervisors?.map?.(data => {
+      const {name: nameData} = data ?? {};
+      const {title, first, last} = nameData ?? {};
+
+      let titleShow = title;
+      if(title === 'Mr' || title === 'Mrs' || title === 'Ms') {
+        titleShow += '.';
+      }
+
+      const nameParts = [titleShow, first, last];
+
+      return nameParts.filter(namePart => namePart)
+        .join(' ');
+    });
+
+    setSupervisors(supervisors);
+    setSupervisor(supervisors?.[0]);
   }
 }
