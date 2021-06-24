@@ -4,8 +4,11 @@ const {url: fileUrl} = import.meta;
 
 const {pathname: file} = new URL(fileUrl);
 
+const watching = process.argv.includes('-w') || process.argv.includes('--watch');
+
 const config = {
   mode: 'development',
+  watch: watching,
   entry: {app: './app.js'},
   output: {filename: 'app.js'},
   devtool: 'inline-source-map',
@@ -30,35 +33,16 @@ const {red, magenta, cyan, green, yellow} = chalk;
 export default config;
 
 if(file === process.argv[1]) {
-  build();
+  webpack(config, callback);
 }
 
-async function build(watch) {
-  let info;
-  try {
-    info = await new Promise((resolve, reject) =>
-      webpack(config, (err, stats) => {
-        const info = stats.toJson();
+function callback(err, stats) {
+  const {warnings, hash, time, outputPath: outputAbs, errors} = stats.toJson();
+  err ??= errors;
 
-        if(info.errors?.length) {
-          err ??= info.errors;
-        }
+  const outputPath = relative(process.cwd(), outputAbs);
 
-        if(err) {
-          return reject(err);
-        }
-
-        return resolve(info);
-    }));
-  } catch(errors) {
-    if(!Array.isArray(errors)) {
-      if(errors) {
-        errors = [errors];
-      } else {
-        errors = [];
-      }
-    }
-
+  if(errors?.length) {
     for(const err of errors) {
       console.error(red(err.stack ?? err));
       if(err.details) {
@@ -69,12 +53,10 @@ async function build(watch) {
     return;
   }
 
-  const {warnings, hash, time, outputPath: outputAbs} = info;
-
-  const outputPath = relative(process.cwd(), outputAbs);
-
-  if(info.warnings?.length) {
-    console.warn(yellow(info.warnings));
+  if(warnings?.length) {
+    for(const warning of warnings) {
+      console.warn(yellow(warnings));
+    }
   }
 
   const seconds = (time / 1000).toFixed(1);
