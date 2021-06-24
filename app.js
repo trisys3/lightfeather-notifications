@@ -20,17 +20,6 @@ export default function Notifications() {
   const [phone, setPhone] = useState();
   const [supervisor, setSupervisor] = useState();
 
-  let typeJsx = <label className='label email'>
-    <div className='label-text email-label'>{'Email'}</div>
-    <input type='text' className='field' placeholder='Email' id='email' value={email || ''} onChange={event => changeField(event, 'email')} />
-  </label>;
-  if(type === 'phone') {
-    typeJsx = <label className='label phone'>
-      <div className='label-text phone-label'>{'Phone'}</div>
-      <input type='text' className='field' placeholder='Phone' id='phone' value={phone || ''} onChange={event => changeField(event, 'phone')} />
-    </label>;
-  }
-
   return <Fragment>
     <div className='notifications-title'>{'Receive Notifications'}</div>
 
@@ -45,21 +34,19 @@ export default function Notifications() {
         <input type='text' className='field' placeholder='Last Name' id='last-name' value={lastName ?? ''} onChange={event => changeField(event, 'last-name')} />
       </label>
 
-      <div className='types'>
-        <div className='types-label'>{'I would like to be notified by:'}</div>
+      <div className='types-label'>{'I would like to be notified by:'}</div>
 
-        <label className='type email'>
-          <div className='type-label email-label'>{'Email'}</div>
-          <input type='radio' name='type' className='type-field' id='email' checked={type === 'email'} onChange={() => setType('email')} />
-        </label>
+      <label className='label type email'>
+        <div className='type-label email-label'>{'Email'}</div>
+        <input type='radio' name='type' className='type-field' id='email' checked={type === 'email'} onChange={() => setType('email')} />
+        <input type='text' className='field' placeholder='Email' id='email' value={email || ''} onChange={event => changeField(event, 'email')} />
+      </label>
 
-        <label className='type phone'>
-          <div className='type-label phone-label'>{'Phone'}</div>
-          <input type='radio' name='type' className='type-field' id='phone' checked={type === 'phone'} onChange={() => setType('phone')} />
-        </label>
-      </div>
-
-      {typeJsx}
+      <label className='label type phone'>
+        <div className='type-label phone-label'>{'Phone'}</div>
+        <input type='radio' name='type' className='type-field' id='phone' checked={type === 'phone'} onChange={() => setType('phone')} />
+        <input type='text' className='field' placeholder='Phone' id='phone' value={phone || ''} onChange={event => changeField(event, 'phone')} />
+      </label>
 
       <button onClick={requestNotifications} className='notifications-submit'>{'Receive'}</button>
     </form>

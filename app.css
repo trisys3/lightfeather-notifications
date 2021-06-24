@@ -6,6 +6,7 @@
 
 .notifications {
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -26,22 +27,19 @@
   height: 35px;
 }
 
-.types {
-  width: calc(50% - 5px);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
 .types-label {
+  text-align: center;
   row-gap: 10px;
   width: 100%;
 }
 
 .type {
-  width: calc(50% - 5px);
   display: flex;
   align-items: center;
+}
+
+.phone {
+  margin-bottom: 20px;
 }
 
 .notifications-submit {
