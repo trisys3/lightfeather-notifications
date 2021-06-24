@@ -29,6 +29,8 @@ export default function Notifications() {
     getSupervisors();
   }, []);
 
+  const phoneShow = maskPhone(phone);
+
   let supervisorExtraClasses = 'no-supervisors';
   let supervisorsJsx = <option className='supervisor no-supervisor'>{'Supervisors'}</option>;
   if(supervisors?.length) {
@@ -67,7 +69,7 @@ export default function Notifications() {
           <input type='radio' name='type' autoComplete='true' className='type-option' id='phone' checked={type === 'phone'} onChange={event => changeType(event, 'phone')} />
         </div>
 
-        <input type='tel' required autoComplete='true' className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={event => changeType(event, 'phone')} onChange={event => changeField(event, 'phone')} />
+        <input type='tel' required autoComplete='true' className='field' placeholder='Phone' id='phone' value={phoneShow} onClick={event => changeType(event, 'phone')} onChange={changePhone} />
       </label>
 
       <label className='label supervisor'>
@@ -85,9 +87,38 @@ export default function Notifications() {
     return firstName && lastName && phone?.match(phoneRegex) && email?.match(emailRegex);
   }
 
+  function maskPhone(phone = '') {
+    let phoneShow = `( ${phone.slice(0, 3)}`;
+    phoneShow = phoneShow.padEnd(5, '_');
+    phoneShow += ' ) - ';
+
+    phoneShow += phone.slice(3, 6) ?? '';
+    phoneShow = phoneShow.padEnd(13, '_');
+    phoneShow += ' - ';
+
+    phoneShow += phone.slice(6, 10);
+    phoneShow = phoneShow.padEnd(20, '_');
+
+    return phoneShow;
+  }
+
+  function unmaskPhone(phoneShow) {
+    const phoneMatches = phoneShow?.match(/\d+/g) ?? '';
+    const phone = phoneMatches?.join('') ?? '';
+
+    return phone?.slice(0, 10);
+  }
+
   function changeType(event, type) {
     setSubmitted();
     setType(type);
+  }
+
+  function changePhone({currentTarget: {value: phoneShow}, nativeEvent}) {
+    const phone = unmaskPhone(phoneShow);
+
+    setSubmitted();
+    setPhone(phone);
   }
 
   function changeField({currentTarget: {value: field}}, fieldName) {
@@ -102,9 +133,6 @@ export default function Notifications() {
         break;
       } case 'email': {
         setEmail(field);
-        break;
-      } case 'phone': {
-        setPhone(field);
         break;
       } case 'supervisor': {
         setSupervisor(field);
