@@ -74,7 +74,7 @@ export default function Notifications() {
         </select>
       </label>
 
-      <button onClick={requestNotifications} disabled={submitted} className='notifications-submit'>{'Receive'}</button>
+      <button onClick={requestNotifications} disabled={submitted && 'disabled' || null} className='notifications-submit'>{'Receive'}</button>
     </form>
   </Fragment>;
 
@@ -118,7 +118,7 @@ export default function Notifications() {
     };
 
     try {
-      // await post('https://6099a4760f5a13001721985c.mockapi.io/api/submit', data);
+      await post('https://6099a4760f5a13001721985c.mockapi.io/api/submit', data);
     } catch(error) {
       setError(true);
     }

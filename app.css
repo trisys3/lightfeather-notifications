@@ -79,4 +79,7 @@
   background-color: #118a11;
 }
 
-.notifications-submit:disabled
+.notifications-submit:disabled {
+  background-color: #c1bfbf;
+  cursor: default;
+}
