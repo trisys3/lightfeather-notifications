@@ -55,24 +55,24 @@ export default function Notifications() {
       <label className='label type email'>
         <div className='label-text type-label email-label'>
           <div className='type-label-text'>{'Email'}</div>
-          <input type='radio' name='type' className='type-option' id='email' checked={type === 'email'} onChange={() => setType('email')} />
+          <input type='radio' name='type' className='type-option' id='email' checked={type === 'email'} onChange={event => changeType(event, 'email')} />
         </div>
 
-        <input type='text' required className='field' placeholder='Email' id='email' value={email || ''} onClick={() => setType('email')} onChange={event => changeField(event, 'email')} />
+        <input type='text' required className='field' placeholder='Email' id='email' value={email || ''} onClick={event => changeType(event, 'email')} onChange={event => changeField(event, 'email')} />
       </label>
 
       <label className='label type phone'>
         <div className='label-text type-label phone-label'>
           <div className='type-label-text'>{'Phone'}</div>
-          <input type='radio' name='type' className='type-option' id='phone' checked={type === 'phone'} onChange={() => setType('phone')} />
+          <input type='radio' name='type' className='type-option' id='phone' checked={type === 'phone'} onChange={event => changeType(event, 'phone')} />
         </div>
 
-        <input type='text' required className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={() => setType('phone')} onChange={event => changeField(event, 'phone')} />
+        <input type='text' required className='field' placeholder='Phone' id='phone' value={phone || ''} onClick={event => changeType(event, 'phone')} onChange={event => changeField(event, 'phone')} />
       </label>
 
       <label className='label supervisor'>
         <div className='label-text supervisor-label'>{'Supervisor'}</div>
-        <select className={`field ${supervisorExtraClasses}`} id='supervisor'>
+        <select required className={`field ${supervisorExtraClasses}`} id='supervisor'>
           {supervisorsJsx}
         </select>
       </label>
@@ -83,6 +83,11 @@ export default function Notifications() {
 
   function canSubmit() {
     return firstName && lastName && phone?.match(phoneRegex) && email?.match(emailRegex);
+  }
+
+  function changeType(event, type) {
+    setSubmitted();
+    setType(type);
   }
 
   function changeField({currentTarget: {value: field}}, fieldName) {
