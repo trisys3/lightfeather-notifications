@@ -7,13 +7,15 @@ const element = document?.getElementById('notifications');
 
 import './app.css';
 
-import {Fragment, useState, useEffect} from 'react';
+import {Fragment, useState, useRef, useEffect} from 'react';
 import {render} from 'react-dom';
 import axios, {post} from 'axios';
 
 render(<Notifications />, element);
 
 export default function Notifications() {
+  const phoneElem = useRef();
+
   const [submitted, setSubmitted] = useState();
   const [changed, setChanged] = useState();
   const [error, setError] = useState();
@@ -22,12 +24,19 @@ export default function Notifications() {
   const [type, setType] = useState('email');
   const [email, setEmail] = useState();
   const [phone, setPhone] = useState();
+  const [phonePosition, setPhonePosition] = useState();
   const [supervisors, setSupervisors] = useState();
   const [supervisor, setSupervisor] = useState();
 
   useEffect(() => {
     getSupervisors();
   }, []);
+
+  useEffect(() => {
+    if(document?.activeElement === phoneElem.current) {
+      setPhoneCursor(phonePosition);
+    }
+  }, [phone]);
 
   const phoneShow = maskPhone(phone);
 
@@ -57,7 +66,7 @@ export default function Notifications() {
       <label className='label type email'>
         <div className='label-text type-label email-label'>
           <div className='type-label-text'>{'Email'}</div>
-          <input type='radio' name='type' autoComplete='true' className='type-option' id='email' checked={type === 'email'} onChange={event => changeType(event, 'email')} />
+          <input type='radio' name='type' autoComplete='true' className='type-option' id='email-chooser' checked={type === 'email'} onChange={event => changeType(event, 'email')} />
         </div>
 
         <input type='text' required autoComplete='true' className='field' placeholder='Email' id='email' value={email || ''} onClick={event => changeType(event, 'email')} onChange={event => changeField(event, 'email')} />
@@ -66,10 +75,10 @@ export default function Notifications() {
       <label className='label type phone'>
         <div className='label-text type-label phone-label'>
           <div className='type-label-text'>{'Phone'}</div>
-          <input type='radio' name='type' autoComplete='true' className='type-option' id='phone' checked={type === 'phone'} onChange={event => changeType(event, 'phone')} />
+          <input type='radio' name='type' autoComplete='true' className='type-option' id='phone-chooser' checked={type === 'phone'} onChange={event => changeType(event, 'phone')} />
         </div>
 
-        <input type='tel' required autoComplete='true' className='field' placeholder='Phone' id='phone' value={phoneShow} onClick={event => changeType(event, 'phone')} onChange={changePhone} />
+        <input type='tel' required autoComplete='true' className='field' placeholder='Phone' id='phone' value={phoneShow} onMouseUp={({currentTarget: {selectionStart: position}}) => setPhoneCursor(position)} onClick={event => changeType(event, 'phone')} onChange={changePhone} ref={phoneElem} />
       </label>
 
       <label className='label supervisor'>
@@ -85,6 +94,28 @@ export default function Notifications() {
 
   function canSubmit() {
     return firstName && lastName && phone?.match(phoneRegex) && email?.match(emailRegex);
+  }
+
+  function setPhoneCursor(prevPos) {
+    const position = getPhoneCursorPos(prevPos);
+
+    phoneElem.current?.setSelectionRange(position, position);
+  }
+
+  function getPhoneCursorPos(position) {
+    if(position <= 2 || !phone?.length) {
+      return 2;
+    }
+
+    if(position > 2 && position <= 5 || phone.length < 3) {
+      return Math.min(position, phone.length + 2, 5);
+    }
+
+    if(position > 5 && position <= 13 || phone.length < 6) {
+      return Math.max(Math.min(position, phone.length + 7), 10);
+    }
+
+    return Math.max(Math.min(position, phone.length + 10, 20), 16);
   }
 
   function maskPhone(phone = '') {
@@ -114,9 +145,26 @@ export default function Notifications() {
     setType(type);
   }
 
-  function changePhone({currentTarget: {value: phoneShow}, nativeEvent}) {
+  function changePhone({currentTarget: {value: phoneShow, selectionStart: position}, nativeEvent}) {
     const phone = unmaskPhone(phoneShow);
 
+    // move to the exchange section
+    if(position === 5) {
+      position = 10;
+    }
+    if(position === 6) {
+      position = 11;
+    }
+
+    // move to the extension section
+    if(position === 13) {
+      position = 16;
+    }
+    if(position === 14) {
+      position = 17;
+    }
+
+    setPhonePosition(position);
     setSubmitted();
     setPhone(phone);
   }
